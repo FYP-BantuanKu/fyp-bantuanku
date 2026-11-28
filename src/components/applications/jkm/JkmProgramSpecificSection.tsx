@@ -1,8 +1,9 @@
 import { Text } from "react-native";
 import { useTranslation } from "react-i18next";
 
-import CollapsibleSection from "../../layout/CollapsibleSection.tsx";
-import BaApplicationForm from "./forms/BaApplicationForm.tsx";
+import CollapsibleSection from "../../layout/CollapsibleSection";
+import BaApplicationForm from "./forms/BaApplicationForm";
+import BatApplicationForm from "./forms/BatApplicationForm";
 
 import type {
   JkmApplicationDraftData
@@ -52,6 +53,18 @@ export default function JkmProgramSpecificSection({
         );
 
       case "BAT":
+        return (
+            <BatApplicationForm
+                data={data.programSpecificData}
+                onChange={(programSpecificData) =>
+                    onChange({
+                      ...data,
+                      programSpecificData
+                    })
+                }
+            />
+        );
+
       case "BPT":
       case "BWE":
         return (

@@ -125,6 +125,7 @@ const testCases: BatTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -152,6 +153,7 @@ const testCases: BatTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -179,6 +181,7 @@ const testCases: BatTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": true,
+      "BAT-006": false,
     },
   },
 
@@ -206,6 +209,7 @@ const testCases: BatTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -233,6 +237,7 @@ const testCases: BatTestCase[] = [
       "BAT-003": true,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -260,6 +265,7 @@ const testCases: BatTestCase[] = [
       "BAT-003": false,
       "BAT-004": true,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -289,6 +295,7 @@ const testCases: BatTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": null,
+      "BAT-006": false,
     },
   },
 
@@ -316,6 +323,7 @@ const testCases: BatTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": true,
+      "BAT-006": false,
     },
   },
 
@@ -343,6 +351,7 @@ const testCases: BatTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": null,
+      "BAT-006": false,
     },
   },
 
@@ -370,6 +379,184 @@ const testCases: BatTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": true,
+      "BAT-006": false,
+    },
+  },
+
+  // BAT eligibility version 2 scenarios
+  {
+    id: "BAT-TC-011",
+    name: "Equipment Cost Exceeds Maximum Assistance Limit",
+
+    facts: {
+      citizenship: "Malaysian",
+      residenceCountry: "Malaysia",
+      isJkmTargetGroup: true,
+      monthlyHouseholdIncome: 2000,
+      perCapitaHouseholdIncome: 700,
+      hasMedicalOrJkmRecommendation: true,
+      requestedAssistiveEquipment: true,
+      estimatedEquipmentCost: 25000,
+      batRecommendationOrEquipmentRequiresReview: false,
+      batSpecialConsiderationRequested: false,
+    },
+
+    expectedStatus: "manual_verification",
+
+    expectedRuleStates: {
+      "BAT-001": true,
+      "BAT-002": false,
+      "BAT-003": false,
+      "BAT-004": false,
+      "BAT-005": false,
+      "BAT-006": true,
+    },
+  },
+
+  {
+    id: "BAT-TC-012",
+    name: "High Equipment Cost and Recommendation Review Required",
+
+    facts: {
+      citizenship: "Malaysian",
+      residenceCountry: "Malaysia",
+      isJkmTargetGroup: true,
+      monthlyHouseholdIncome: 2000,
+      perCapitaHouseholdIncome: 700,
+      hasMedicalOrJkmRecommendation: true,
+      requestedAssistiveEquipment: true,
+      estimatedEquipmentCost: 25000,
+      batRecommendationOrEquipmentRequiresReview: true,
+      batSpecialConsiderationRequested: false,
+    },
+
+    expectedStatus: "manual_verification",
+
+    expectedRuleStates: {
+      "BAT-001": true,
+      "BAT-002": true,
+      "BAT-003": false,
+      "BAT-004": false,
+      "BAT-005": false,
+      "BAT-006": true,
+    },
+  },
+
+  {
+    id: "BAT-TC-013",
+    name: "High Equipment Cost Without Preliminary Eligibility",
+
+    facts: {
+      citizenship: "Malaysian",
+      residenceCountry: "Malaysia",
+      isJkmTargetGroup: false,
+      monthlyHouseholdIncome: 2000,
+      perCapitaHouseholdIncome: 700,
+      hasMedicalOrJkmRecommendation: true,
+      requestedAssistiveEquipment: true,
+      estimatedEquipmentCost: 25000,
+      batRecommendationOrEquipmentRequiresReview: false,
+      batSpecialConsiderationRequested: false,
+    },
+
+    expectedStatus: "potentially_ineligible",
+
+    expectedRuleStates: {
+      "BAT-001": false,
+      "BAT-002": false,
+      "BAT-003": false,
+      "BAT-004": false,
+      "BAT-005": true,
+      "BAT-006": false,
+    },
+  },
+
+  {
+    id: "BAT-TC-014",
+    name: "High Equipment Cost With Unresolved PGK Thresholds",
+
+    facts: {
+      citizenship: "Malaysian",
+      residenceCountry: "Malaysia",
+      isJkmTargetGroup: true,
+      monthlyHouseholdIncome: 2000,
+      perCapitaHouseholdIncome: 700,
+      hasMedicalOrJkmRecommendation: true,
+      requestedAssistiveEquipment: true,
+      estimatedEquipmentCost: 25000,
+      batRecommendationOrEquipmentRequiresReview: false,
+      batSpecialConsiderationRequested: false,
+    },
+
+    thresholds: {},
+
+    expectedStatus: "insufficient_information",
+
+    expectedRuleStates: {
+      "BAT-001": null,
+      "BAT-002": false,
+      "BAT-003": false,
+      "BAT-004": false,
+      "BAT-005": null,
+      "BAT-006": null,
+    },
+  },
+
+  {
+    id: "BAT-TC-015",
+    name: "Applicant Meets Standard Requirements With Unknown Equipment Cost",
+
+    facts: {
+      citizenship: "Malaysian",
+      residenceCountry: "Malaysia",
+      isJkmTargetGroup: true,
+      monthlyHouseholdIncome: 2000,
+      perCapitaHouseholdIncome: 700,
+      hasMedicalOrJkmRecommendation: true,
+      requestedAssistiveEquipment: true,
+      estimatedEquipmentCost: null,
+      batRecommendationOrEquipmentRequiresReview: false,
+      batSpecialConsiderationRequested: false,
+    },
+
+    expectedStatus: "potentially_eligible",
+
+    expectedRuleStates: {
+      "BAT-001": true,
+      "BAT-002": false,
+      "BAT-003": null,
+      "BAT-004": false,
+      "BAT-005": false,
+      "BAT-006": null,
+    },
+  },
+
+  {
+    id: "BAT-TC-016",
+    name: "High Equipment Cost With Special Consideration",
+
+    facts: {
+      citizenship: "Malaysian",
+      residenceCountry: "Malaysia",
+      isJkmTargetGroup: true,
+      monthlyHouseholdIncome: 3000,
+      perCapitaHouseholdIncome: 700,
+      hasMedicalOrJkmRecommendation: true,
+      requestedAssistiveEquipment: true,
+      estimatedEquipmentCost: 25000,
+      batRecommendationOrEquipmentRequiresReview: false,
+      batSpecialConsiderationRequested: true,
+    },
+
+    expectedStatus: "manual_verification",
+
+    expectedRuleStates: {
+      "BAT-001": false,
+      "BAT-002": false,
+      "BAT-003": false,
+      "BAT-004": true,
+      "BAT-005": false,
+      "BAT-006": false,
     },
   },
 ];
@@ -414,7 +601,9 @@ describe("BantuanKu - BAT Eligibility Testing", () => {
             expectedMatchedRuleIds
         );
 
-        expect(result.ruleResults).toHaveLength(5);
+        expect(Object.keys(expectedRuleStates)).toHaveLength(6);
+
+        expect(result.ruleResults).toHaveLength(6);
       }
   );
 });

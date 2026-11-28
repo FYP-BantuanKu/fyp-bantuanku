@@ -191,6 +191,84 @@ export async function getMyApplications(): Promise<ApplicationSummary[]> {
   );
 }
 
+// Retrieve a specific application belonging to the current applicant
+export async function getApplicationById(
+    applicationId: string,
+    expectedProgramCode: JkmProgramCode | "STR"
+): Promise<ApplicationSummary> {
+  const profileId = await getCurrentProfileId();
+
+  const { data, error } = await supabase
+      .from("applications")
+      .select(`
+        id,
+        profile_id,
+        program_id,
+        status,
+        current_step,
+        simulated_submitted_at,
+        created_at,
+        updated_at,
+        aid_programs (
+          code,
+          name,
+          agency
+        ),
+        external_application_submissions (
+          provider,
+          submission_state,
+          provider_application_id,
+          reference_no,
+          provider_status,
+          submitted_at,
+          provider_updated_at,
+          last_synced_at
+        )
+      `)
+      .eq("id", applicationId)
+      .eq("profile_id", profileId)
+      .maybeSingle();
+
+  if (error) {
+    throw new Error(
+        `Unable to retrieve application: ${error.message}`,
+    );
+  }
+
+  if (!data) {
+    throw new Error(
+        "Application not found or access denied.",
+    );
+  }
+
+  const application = data as unknown as ApplicationRow;
+
+  const programCode = application.aid_programs?.code
+      .trim()
+      .toUpperCase();
+
+  if (programCode !== expectedProgramCode) {
+    throw new Error(
+        "Application does not belong to the requested aid program.",
+    );
+  }
+
+  return {
+    id: application.id,
+    profileId: application.profile_id,
+    programId: application.program_id,
+    programCode: application.aid_programs?.code ?? "",
+    programName: application.aid_programs?.name ?? "Unknown Program",
+    agency: application.aid_programs?.agency ?? "",
+    status: application.status,
+    currentStep: application.current_step,
+    simulatedSubmittedAt: application.simulated_submitted_at,
+    createdAt: application.created_at,
+    updatedAt: application.updated_at,
+    externalSubmission: getExternalSubmission(application),
+  };
+}
+
 // Retrieve or create an STR application
 export async function getOrCreateStrApplication(): Promise<ApplicationSummary> {
   const profileId = await getCurrentProfileId();

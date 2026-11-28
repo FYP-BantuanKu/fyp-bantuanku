@@ -1,15 +1,17 @@
-import { supabase } from "../../../lib/supabase.ts";
-import { getCurrentProfileId } from "../../profile/profileService.ts";
+import { supabase } from "../../../lib/supabase";
+import { getCurrentProfileId } from "../../profile/profileService";
 
 import {
   EDITABLE_APPLICATION_STATUSES,
-} from "../../../constants/applications/applications.ts";
+} from "../../../constants/applications/applications";
 
 import type {
   ApplicationStatus,
   JkmProgramCode,
   JkmApplicationDraftData,
-} from "../../../types/applications.ts";
+} from "../../../types/applications";
+
+import { getSavedEligibilityAnswers } from "../../eligibility/eligibilityQuestionnaireService";
 
 type ApplicationData = Record<string, unknown>;
 
@@ -298,6 +300,58 @@ export function buildInitialJkmApplicationData(
           "Unsupported JKM application program.",
       );
   }
+}
+
+// Initialize application data using available questionnaire answers
+export async function buildPrefilledJkmApplicationData(
+    programCode: JkmProgramCode
+): Promise<JkmApplicationDraftData> {
+  const applicationData = buildInitialJkmApplicationData(programCode);
+
+  // BAT questionnaire prefilling
+  if (applicationData.programCode === "BAT") {
+    try {
+      const answers = await getSavedEligibilityAnswers("BAT");
+
+      if (!answers) {
+        return applicationData;
+      }
+
+      const estimatedCost = answers.estimatedEquipmentCost;
+
+      const hasValidEstimatedCost =
+          answers.requestedAssistiveEquipment === true &&
+          typeof estimatedCost === "number" &&
+          Number.isFinite(estimatedCost) &&
+          estimatedCost >= 0;
+
+      return {
+        ...applicationData,
+        programSpecificData: {
+          ...applicationData.programSpecificData,
+
+          equipment: {
+            ...applicationData.programSpecificData.equipment,
+
+            estimatedCost: hasValidEstimatedCost ? estimatedCost : null,
+          },
+
+          recommendation: {
+            ...applicationData.programSpecificData.recommendation,
+
+            recommendationAvailable: answers.hasMedicalOrJkmRecommendation === true ? true : null,
+          },
+        },
+      };
+    } catch (error) {
+      console.warn(
+          "[JKM Application] Unable to prefill BAT questionnaire answer:",
+          error
+      );
+    }
+  }
+
+  return applicationData;
 }
 
 // Persist programme-specific JKM application declarations

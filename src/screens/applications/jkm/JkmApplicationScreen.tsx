@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Text, View } from "react-native";
 
@@ -20,7 +20,8 @@ import {
 } from "../../../services/applications/applicationEligibilityService";
 
 import {
-  getOrCreateJkmApplication
+  getOrCreateJkmApplication,
+  getApplicationById
 } from "../../../services/applications/applicationServices";
 
 import {
@@ -53,25 +54,34 @@ import ApplicationAlert from "../../../components/ui/Alert";
 
 import { isExistingSubmission } from "../../../utils/applicationUtils";
 
+import { getSavedEligibilityAnswers } from "../../../services/eligibility/eligibilityQuestionnaireService";
+
+import type { ProgramEligibilityAnswers } from "../../../services/eligibility/eligibilityDataService";
+
 interface JkmApplicationScreenProps {
   programCode?: JkmProgramCode;
+  applicationId?: string;
 }
 
 export default function JkmApplicationScreen({
-    programCode = "BA"
+    programCode = "BA",
+    applicationId
 }: JkmApplicationScreenProps) {
   return (
       <JkmApplicationContent
-          key={programCode}
+          key={`${programCode}:${applicationId ?? "new"}`}
           programCode={programCode}
+          applicationId={applicationId}
       />
   );
 }
 
 function JkmApplicationContent({
-    programCode
+    programCode,
+    applicationId
 }: {
   programCode: JkmProgramCode;
+  applicationId?: string;
 }) {
   const { t } = useTranslation();
 
@@ -130,6 +140,11 @@ function JkmApplicationContent({
   const [applicationData, setApplicationData] = useState<JkmApplicationDraftData | null>(null);
   const [declarationAccepted, setDeclarationAccepted] = useState(false);
   const [showProgramSpecificData, setShowProgramSpecificData] = useState(true);
+  const latestApplicationDataRef = useRef<JkmApplicationDraftData | null>(null);
+
+  useEffect(() => {
+    latestApplicationDataRef.current = applicationData;
+  }, [applicationData]);
 
   const loadApplication = useCallback(async () => {
     if (operationRef.current) {
@@ -142,10 +157,17 @@ function JkmApplicationContent({
       setLoading(true);
       setError(null);
       setSubmissionStateVerified(false);
+      latestApplicationDataRef.current = null;
+
+      const existingApplicationId = applicationId ?? applicationRef.current?.id;
 
       const jkmApplication =
-          applicationRef.current ??
-          await getOrCreateJkmApplication(programCode);
+          existingApplicationId
+              ? await getApplicationById(
+                  existingApplicationId,
+                  programCode
+              )
+              : await getOrCreateJkmApplication(programCode);
 
       applicationRef.current = jkmApplication;
 
@@ -178,10 +200,17 @@ function JkmApplicationContent({
       setExternalSubmissionState(submissionState);
       setPreliminaryEligibility(eligibilitySnapshot);
 
-      setApplicationData(
+      const initializedApplicationData =
           savedApplicationData ??
-          await buildPrefilledJkmApplicationData(programCode)
-      );
+          (
+              isExistingSubmission(submissionState) ||
+              jkmApplication.status === "simulated_submitted"
+                  ? null
+                  : await buildPrefilledJkmApplicationData(programCode)
+          );
+
+      latestApplicationDataRef.current = initializedApplicationData;
+      setApplicationData(initializedApplicationData);
 
       setDeclarationAccepted(false);
       setSubmissionStateVerified(true);
@@ -209,6 +238,7 @@ function JkmApplicationContent({
     }
   }, [
     programCode,
+    applicationId,
     operationRef,
     applicationRef,
     setLoading,
@@ -225,12 +255,19 @@ function JkmApplicationContent({
     void loadApplication();
   }, [loadApplication]);
 
+
   const baData =
       applicationData?.programCode === "BA"
           ? applicationData.programSpecificData
           : null;
 
-  const programSpecificDataComplete =
+  const batData =
+      applicationData?.programCode === "BAT"
+          ? applicationData.programSpecificData
+          : null;
+
+  // BA programme-specific validation
+  const baDataComplete =
       !!baData &&
       typeof baData.receivesOtherJkmMonthlyAssistance === "boolean" &&
       (
@@ -243,13 +280,135 @@ function JkmApplicationContent({
           !!baData.additionalCircumstances.description?.trim()
       );
 
+  // BAT beneficiary validation
+  const batBeneficiary = batData?.beneficiary;
+
+  const batBeneficiaryTypeValid =
+      batBeneficiary?.type === "applicant" ||
+      batBeneficiary?.type === "dependent";
+
+  const batBeneficiaryIdentificationNo =
+      batBeneficiary?.identificationNo?.replace(/\D/g, "") ?? "";
+
+  const applicantIdentificationNo =
+      applicant?.identificationNo?.replace(/\D/g, "") ?? "";
+
+  const batDependentIdentificationValid =
+      !batBeneficiaryIdentificationNo ||
+      (
+          batBeneficiaryIdentificationNo.length === 12 &&
+          batBeneficiaryIdentificationNo !== applicantIdentificationNo
+      );
+
+  const batBeneficiaryComplete =
+      batBeneficiaryTypeValid &&
+      (
+          batBeneficiary?.type === "applicant" ||
+          (
+              batBeneficiary?.type === "dependent" &&
+              !!batBeneficiary.fullName?.trim() &&
+              !!batBeneficiary.relationshipToApplicant?.trim() &&
+              batDependentIdentificationValid
+          )
+      );
+
+  // BAT dependent health validation
+  const batTreatmentStartDate =
+      batBeneficiary?.health?.treatmentStartDate?.trim() ?? "";
+
+  const batTreatmentStartDateValid =
+      !batTreatmentStartDate ||
+      (
+          /^\d{4}-\d{2}-\d{2}$/.test(batTreatmentStartDate) &&
+          Number.isFinite(Date.parse(batTreatmentStartDate)) &&
+          new Date(batTreatmentStartDate)
+              .toISOString()
+              .slice(0, 10) === batTreatmentStartDate
+      );
+
+  const batBeneficiaryHealthComplete =
+      batBeneficiary?.type !== "dependent" ||
+      batTreatmentStartDateValid;
+
+  // BAT equipment validation
+  const batEquipment = batData?.equipment;
+
+  const batEstimatedCost = batEquipment?.estimatedCost;
+
+  const batEstimatedCostValid =
+      batEstimatedCost === null ||
+      batEstimatedCost === undefined ||
+      (
+          typeof batEstimatedCost === "number" &&
+          Number.isFinite(batEstimatedCost) &&
+          batEstimatedCost >= 0
+      );
+
+  const batRequiresAdditionalJustification =
+      typeof batEstimatedCost === "number" &&
+      batEstimatedCost > 20000;
+
+  const batEquipmentComplete =
+      !!batEquipment?.equipmentType?.trim() &&
+      !!batEquipment.equipmentDescription?.trim() &&
+      !!batEquipment.purpose?.trim() &&
+      batEstimatedCostValid &&
+      (
+          !batRequiresAdditionalJustification ||
+          !!batData?.additionalJustification?.trim()
+      );
+
+  // BAT recommendation validation
+  const batRecommendation = batData?.recommendation;
+
+  const batRecommendingAuthority = batRecommendation?.recommendingAuthority;
+
+  const batRecommendingAuthorityValid =
+      batRecommendingAuthority === "medical_officer" ||
+      batRecommendingAuthority === "jkm_officer" ||
+      batRecommendingAuthority === "other";
+
+  const batRecommendationComplete =
+      (
+          batRecommendingAuthority === null ||
+          batRecommendingAuthority === undefined ||
+          batRecommendingAuthorityValid
+      ) &&
+      (
+          batRecommendation?.recommendationAvailable !== true ||
+          batRecommendingAuthorityValid
+      ) &&
+      (
+          batRecommendingAuthority !== "other" ||
+          !!batRecommendation?.recommendationDetails?.trim()
+      );
+
+  // BAT programme-specific validation
+  const batDataComplete =
+      !!batData &&
+      batBeneficiaryComplete &&
+      batBeneficiaryHealthComplete &&
+      batEquipmentComplete &&
+      batRecommendationComplete;
+
+  // Determine programme-specific application readiness
+  const programSpecificDataComplete =
+      applicationData?.programCode === "BA"
+          ? baDataComplete
+          : applicationData?.programCode === "BAT"
+              ? batDataComplete
+              : false;
+
   const applicationReady =
       applicant?.profileReady === true &&
       programSpecificDataComplete;
 
   const canSave =
       canEdit &&
-      applicationData?.programCode === "BA";
+      (
+          applicationData?.programCode === "BA" ||
+          applicationData?.programCode === "BAT"
+      );
 
   const canSubmit = getCanSubmit(
       applicationReady,
@@ -268,6 +427,7 @@ function JkmApplicationContent({
     }
 
     setApplicationData(data);
+    latestApplicationDataRef.current = data;
     setDeclarationAccepted(false);
   };
 
@@ -286,9 +446,11 @@ function JkmApplicationContent({
   };
 
   const handleSaveDraft = async () => {
+    const dataToSave = latestApplicationDataRef.current;
+
     if (
         !application ||
-        !applicationData ||
+        !dataToSave ||
         !canSave ||
         operationRef.current
     ) {
@@ -318,9 +480,10 @@ function JkmApplicationContent({
       const savedData =
           await saveJkmApplicationData(
               application.id,
-              applicationData
+              dataToSave
           );
 
+      latestApplicationDataRef.current = savedData;
       setApplicationData(savedData);
 
       Alert.alert(
@@ -348,6 +511,8 @@ function JkmApplicationContent({
   };
 
   const handleSubmit = async () => {
+    const latestApplicationData = latestApplicationDataRef.current;
+
     if (
         !application ||
         !canSubmit ||
@@ -372,7 +537,7 @@ function JkmApplicationContent({
 
       if (!isExistingSubmission(submissionState)) {
         if (
-            !applicationData ||
+            !latestApplicationData ||
             !applicationReady ||
             !declarationAccepted ||
             alreadySubmitted ||
@@ -385,12 +550,49 @@ function JkmApplicationContent({
 
         await saveJkmApplicationData(
             application.id,
-            applicationData
+            latestApplicationData
         );
+
+
+        let eligibilityAnswers: ProgramEligibilityAnswers = {};
+
+        // Use the latest BAT application declarations
+        if (latestApplicationData.programCode === "BAT") {
+          const savedAnswers = await getSavedEligibilityAnswers("BAT");
+          const batData = latestApplicationData.programSpecificData;
+          const recommendationAvailable = batData.recommendation.recommendationAvailable;
+          const recommendingAuthority = batData.recommendation.recommendingAuthority;
+
+          const hasMedicalOrJkmRecommendation =
+              recommendationAvailable === false
+                  ? false
+                  : recommendationAvailable === true
+                      ? (
+                          recommendingAuthority === "medical_officer" ||
+                          recommendingAuthority === "jkm_officer"
+                      )
+                      : null;
+
+          eligibilityAnswers = {
+            bat: {
+              ...savedAnswers,
+
+              requestedAssistiveEquipment: true,
+
+              estimatedEquipmentCost:
+                  batData.equipment.estimatedCost ?? null,
+
+              hasMedicalOrJkmRecommendation,
+            },
+          };
+        }
 
         const assessment =
             await assessApplicantEligibility(
-                programCode
+                programCode,
+                {
+                  answers: eligibilityAnswers,
+                }
             );
 
         const snapshot =
@@ -466,7 +668,10 @@ function JkmApplicationContent({
                 onSubmit={handleSubmit}
                 onRefresh={loadApplication}
                 onSaveDraft={
-                  applicationData?.programCode === "BA"
+                  (
+                      applicationData?.programCode === "BA" ||
+                      applicationData?.programCode === "BAT"
+                  )
                       ? handleSaveDraft
                       : undefined
                 }

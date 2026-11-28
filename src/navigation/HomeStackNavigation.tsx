@@ -15,10 +15,13 @@ export type HomeStackParamList = {
     programCode: "BAT" | "BPT";
   };
 
-  StrApplication: undefined;
+  StrApplication: {
+    applicationId?: string;
+  } | undefined;
 
   JkmApplication: {
     programCode: JkmProgramCode;
+    applicationId?: string;
   };
 };
 
@@ -33,6 +36,7 @@ function JkmApplicationRoute({
   return (
       <JkmApplicationScreen
           programCode={route.params.programCode}
+          applicationId={route.params.applicationId}
       />
   );
 }

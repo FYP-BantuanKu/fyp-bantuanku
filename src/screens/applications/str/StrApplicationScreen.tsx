@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
+import { useRoute } from "@react-navigation/native";
+import type { RouteProp } from "@react-navigation/native";
+
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 
@@ -14,7 +17,8 @@ import {
 } from "../../../services/applications/applicationEligibilityService";
 
 import {
-  getOrCreateStrApplication
+  getOrCreateStrApplication,
+  getApplicationById
 } from "../../../services/applications/applicationServices";
 
 import {
@@ -40,11 +44,34 @@ import ApplicationSubmissionActions from "../../../components/applications/share
 
 import { isExistingSubmission, isStrApplicantProfileComplete } from "../../../utils/applicationUtils";
 
+import type { ApplicationsStackParamList } from "../../../navigation/ApplicationsStackNavigator";
+
+type StrApplicationRoute = RouteProp<
+    ApplicationsStackParamList,
+    "StrApplication"
+>;
+
 export default function StrApplicationScreen() {
+  const route = useRoute<StrApplicationRoute>();
+
+  const applicationId = route.params?.applicationId;
+
+  return (
+      <StrApplicationContent
+          key={applicationId ?? "new"}
+          applicationId={applicationId}
+      />
+  );
+}
+
+function StrApplicationContent({
+    applicationId
+}: {
+  applicationId?: string;
+}) {
   const { t } = useTranslation();
 
   const submission = useApplicationSubmission<StrSubmissionResult>();
-
   const sections = useApplicationSections();
 
   const {
@@ -102,9 +129,17 @@ export default function StrApplicationScreen() {
       setError(null);
       setSubmissionStateVerified(false);
 
+      const existingApplicationId = applicationId ?? applicationRef.current?.id;
+
       const strApplication =
-          applicationRef.current ??
-          await getOrCreateStrApplication();
+          existingApplicationId
+              ? await getApplicationById(
+                  existingApplicationId,
+                  "STR"
+              )
+              : await getOrCreateStrApplication();
+
+      applicationRef.current = strApplication;
 
       const [
         applicantReview,
@@ -124,13 +159,22 @@ export default function StrApplicationScreen() {
         )
       ]);
 
-      applicationRef.current = strApplication;
+      // applicationRef.current = strApplication;
 
       setApplication(strApplication);
       setApplicant(applicantReview);
       setExternalSubmissionState(submissionState);
       setPreliminaryEligibility(eligibilitySnapshot);
       setSubmissionStateVerified(true);
+
+      if (submissionState === "submitted") {
+        const result = await submitStrApplication(
+            strApplication.id
+        );
+
+        applyConfirmation(result, strApplication);
+        setShowConfirmationDetails(true);
+      }
     } catch (err) {
       setError(
           err instanceof Error
@@ -144,6 +188,7 @@ export default function StrApplicationScreen() {
       setLoading(false);
     }
   }, [
+    applicationId,
     operationRef,
     applicationRef,
     setLoading,
@@ -151,7 +196,9 @@ export default function StrApplicationScreen() {
     setSubmissionStateVerified,
     setApplication,
     setExternalSubmissionState,
-    setPreliminaryEligibility
+    setPreliminaryEligibility,
+    applyConfirmation,
+    setShowConfirmationDetails
   ]);
 
   useEffect(() => {

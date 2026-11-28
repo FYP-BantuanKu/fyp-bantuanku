@@ -170,6 +170,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
     expectRule(result, "BAT-003", false);
     expectRule(result, "BAT-004", false);
     expectRule(result, "BAT-005", false);
+    expectRule(result, "BAT-006", false);
 
     expectCondition(result, "BAT-001", "citizenship", true);
     expectCondition(result, "BAT-001", "residenceCountry", true);
@@ -186,6 +187,8 @@ describe("BAT Eligibility Accuracy Validation", () => {
         "hasMedicalOrJkmRecommendation",
         true
     );
+
+    expect(result.ruleResults).toHaveLength(6);
   });
 
   test("ACC-002 - Applicant is not Malaysian", () => {
@@ -203,6 +206,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
 
     expectRule(result, "BAT-001", false);
     expectRule(result, "BAT-005", true);
+    expectRule(result, "BAT-006", false);
     expectCondition(result, "BAT-001", "citizenship", false);
   });
 
@@ -221,6 +225,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
 
     expectRule(result, "BAT-001", false);
     expectRule(result, "BAT-005", true);
+    expectRule(result, "BAT-006", false);
     expectCondition(result, "BAT-001", "residenceCountry", false);
   });
 
@@ -239,6 +244,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
 
     expectRule(result, "BAT-001", false);
     expectRule(result, "BAT-005", true);
+    expectRule(result, "BAT-006", false);
     expectCondition(result, "BAT-001", "isJkmTargetGroup", false);
   });
 
@@ -257,6 +263,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
     );
 
     expectRule(result, "BAT-001", true);
+    expectRule(result, "BAT-006", false);
     expectCondition(
         result,
         "BAT-001",
@@ -280,6 +287,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
     );
 
     expectRule(result, "BAT-001", true);
+    expectRule(result, "BAT-006", false);
     expectCondition(
         result,
         "BAT-001",
@@ -304,6 +312,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
 
     expectRule(result, "BAT-001", false);
     expectRule(result, "BAT-005", true);
+    expectRule(result, "BAT-006", false);
 
     expectCondition(
         result,
@@ -334,6 +343,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
 
     expectRule(result, "BAT-001", false);
     expectRule(result, "BAT-005", true);
+    expectRule(result, "BAT-006", false);
     expectCondition(
         result,
         "BAT-001",
@@ -357,6 +367,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
 
     expectRule(result, "BAT-001", null);
     expectRule(result, "BAT-005", null);
+    expectRule(result, "BAT-006", false);
 
     expectCondition(
         result,
@@ -384,6 +395,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
 
     expectRule(result, "BAT-001", true);
     expectRule(result, "BAT-005", false);
+    expectRule(result, "BAT-006", false);
     expectCondition(
         result,
         "BAT-001",
@@ -408,6 +420,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
 
     expectRule(result, "BAT-001", null);
     expectRule(result, "BAT-005", null);
+    expectRule(result, "BAT-006", false);
 
     expectCondition(
         result,
@@ -440,6 +453,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
     expectRule(result, "BAT-003", false);
     expectRule(result, "BAT-004", false);
     expectRule(result, "BAT-005", null);
+    expectRule(result, "BAT-006", false);
   });
 
   test("ACC-013 - Missing household PGK does not block qualifying per-capita income", () => {
@@ -460,6 +474,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
     );
 
     expectRule(result, "BAT-001", true);
+    expectRule(result, "BAT-006", false);
     expectCondition(
         result,
         "BAT-001",
@@ -491,6 +506,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
     expectRule(result, "BAT-003", false);
     expectRule(result, "BAT-004", false);
     expectRule(result, "BAT-005", null);
+    expectRule(result, "BAT-006", false);
   });
 
   test("ACC-015 - Equipment costing RM10,000 needs no additional approval", () => {
@@ -507,9 +523,17 @@ describe("BAT Eligibility Accuracy Validation", () => {
     );
 
     expectRule(result, "BAT-003", false);
+    expectRule(result, "BAT-006", false);
+
     expectCondition(
         result,
         "BAT-003",
+        "estimatedEquipmentCost",
+        false
+    );
+    expectCondition(
+        result,
+        "BAT-006",
         "estimatedEquipmentCost",
         false
     );
@@ -530,12 +554,19 @@ describe("BAT Eligibility Accuracy Validation", () => {
 
     expectRule(result, "BAT-001", true);
     expectRule(result, "BAT-003", true);
+    expectRule(result, "BAT-006", false);
 
     expectCondition(
         result,
         "BAT-003",
         "estimatedEquipmentCost",
         true
+    );
+    expectCondition(
+        result,
+        "BAT-006",
+        "estimatedEquipmentCost",
+        false
     );
 
     expect(result.manualVerification.length).toBeGreaterThan(0);
@@ -555,9 +586,17 @@ describe("BAT Eligibility Accuracy Validation", () => {
     );
 
     expectRule(result, "BAT-003", true);
+    expectRule(result, "BAT-006", false);
+
+    expectCondition(
+        result,
+        "BAT-006",
+        "estimatedEquipmentCost",
+        false
+    );
   });
 
-  test("ACC-018 - Equipment above RM20,000 is outside the defined approval rule", () => {
+  test("ACC-018 - Equipment above RM20,000 requires further assessment", () => {
     const result = evaluate(
         createEligibleBatFacts({
           estimatedEquipmentCost: 20001,
@@ -566,11 +605,31 @@ describe("BAT Eligibility Accuracy Validation", () => {
 
     expectStatusAndRules(
         result,
-        "potentially_eligible",
-        ["BAT-001"]
+        "manual_verification",
+        ["BAT-001", "BAT-006"]
     );
 
+    expectRule(result, "BAT-001", true);
+    expectRule(result, "BAT-002", false);
     expectRule(result, "BAT-003", false);
+    expectRule(result, "BAT-004", false);
+    expectRule(result, "BAT-005", false);
+    expectRule(result, "BAT-006", true);
+
+    expectCondition(
+        result,
+        "BAT-003",
+        "estimatedEquipmentCost",
+        false
+    );
+    expectCondition(
+        result,
+        "BAT-006",
+        "estimatedEquipmentCost",
+        true
+    );
+
+    expect(result.manualVerification.length).toBeGreaterThan(0);
   });
 
   test("ACC-019 - Recommendation or equipment review required", () => {
@@ -589,6 +648,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
     expectRule(result, "BAT-001", true);
     expectRule(result, "BAT-002", true);
     expectRule(result, "BAT-005", false);
+    expectRule(result, "BAT-006", false);
 
     expectCondition(
         result,
@@ -616,6 +676,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
     expectRule(result, "BAT-001", true);
     expectRule(result, "BAT-002", null);
     expectRule(result, "BAT-005", false);
+    expectRule(result, "BAT-006", false);
 
     expect(
         result.missingInformation.some(
@@ -643,6 +704,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
     expectRule(result, "BAT-001", false);
     expectRule(result, "BAT-004", true);
     expectRule(result, "BAT-005", false);
+    expectRule(result, "BAT-006", false);
 
     expectCondition(
         result,
@@ -672,6 +734,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
     expectRule(result, "BAT-001", false);
     expectRule(result, "BAT-004", null);
     expectRule(result, "BAT-005", null);
+    expectRule(result, "BAT-006", false);
   });
 
   test("ACC-023 - No preliminary match and no special consideration", () => {
@@ -694,6 +757,7 @@ describe("BAT Eligibility Accuracy Validation", () => {
     expectRule(result, "BAT-003", false);
     expectRule(result, "BAT-004", false);
     expectRule(result, "BAT-005", true);
+    expectRule(result, "BAT-006", false);
   });
 
   test("ACC-024 - Contradictory outcomes require manual verification", () => {
@@ -755,5 +819,308 @@ describe("BAT Eligibility Accuracy Validation", () => {
 
     expectRule(result, "BAT-CONFLICT-ELIGIBLE", true);
     expectRule(result, "BAT-CONFLICT-INELIGIBLE", true);
+  });
+
+  // BAT-006 equipment cost accuracy validation
+  test("ACC-025 - Equipment costing RM10,000.01 requires further approval", () => {
+    const result = evaluate(
+        createEligibleBatFacts({
+          estimatedEquipmentCost: 10000.01,
+        })
+    );
+
+    expectStatusAndRules(
+        result,
+        "manual_verification",
+        ["BAT-001", "BAT-003"]
+    );
+
+    expectRule(result, "BAT-001", true);
+    expectRule(result, "BAT-003", true);
+    expectRule(result, "BAT-006", false);
+
+    expectCondition(
+        result,
+        "BAT-003",
+        "estimatedEquipmentCost",
+        true
+    );
+    expectCondition(
+        result,
+        "BAT-006",
+        "estimatedEquipmentCost",
+        false
+    );
+
+    expect(result.manualVerification.length).toBeGreaterThan(0);
+  });
+
+  test("ACC-026 - Equipment costing RM20,000.01 requires further assessment", () => {
+    const result = evaluate(
+        createEligibleBatFacts({
+          estimatedEquipmentCost: 20000.01,
+        })
+    );
+
+    expectStatusAndRules(
+        result,
+        "manual_verification",
+        ["BAT-001", "BAT-006"]
+    );
+
+    expectRule(result, "BAT-001", true);
+    expectRule(result, "BAT-003", false);
+    expectRule(result, "BAT-005", false);
+    expectRule(result, "BAT-006", true);
+
+    expectCondition(
+        result,
+        "BAT-003",
+        "estimatedEquipmentCost",
+        false
+    );
+    expectCondition(
+        result,
+        "BAT-006",
+        "estimatedEquipmentCost",
+        true
+    );
+
+    expect(result.manualVerification.length).toBeGreaterThan(0);
+  });
+
+  test("ACC-027 - Equipment costing RM25,000 requires further assessment", () => {
+    const result = evaluate(
+        createEligibleBatFacts({
+          estimatedEquipmentCost: 25000,
+        })
+    );
+
+    expectStatusAndRules(
+        result,
+        "manual_verification",
+        ["BAT-001", "BAT-006"]
+    );
+
+    expectRule(result, "BAT-001", true);
+    expectRule(result, "BAT-002", false);
+    expectRule(result, "BAT-003", false);
+    expectRule(result, "BAT-004", false);
+    expectRule(result, "BAT-005", false);
+    expectRule(result, "BAT-006", true);
+
+    expectCondition(
+        result,
+        "BAT-006",
+        "estimatedEquipmentCost",
+        true
+    );
+
+    expect(result.manualVerification.length).toBeGreaterThan(0);
+  });
+
+  test("ACC-028 - High equipment cost does not override failed preliminary eligibility", () => {
+    const result = evaluate(
+        createEligibleBatFacts({
+          estimatedEquipmentCost: 25000,
+          isJkmTargetGroup: false,
+        })
+    );
+
+    expectStatusAndRules(
+        result,
+        "potentially_ineligible",
+        ["BAT-005"]
+    );
+
+    expectRule(result, "BAT-001", false);
+    expectRule(result, "BAT-002", false);
+    expectRule(result, "BAT-003", false);
+    expectRule(result, "BAT-004", false);
+    expectRule(result, "BAT-005", true);
+    expectRule(result, "BAT-006", false);
+
+    expectCondition(
+        result,
+        "BAT-001",
+        "isJkmTargetGroup",
+        false
+    );
+    expectCondition(
+        result,
+        "BAT-006",
+        "estimatedEquipmentCost",
+        true
+    );
+  });
+
+  test("ACC-029 - High equipment cost preserves unknown eligibility when PGK thresholds are unresolved", () => {
+    const result = evaluate(
+        createEligibleBatFacts({
+          estimatedEquipmentCost: 25000,
+        }),
+        {}
+    );
+
+    expectStatusAndRules(
+        result,
+        "insufficient_information",
+        []
+    );
+
+    expectRule(result, "BAT-001", null);
+    expectRule(result, "BAT-002", false);
+    expectRule(result, "BAT-003", false);
+    expectRule(result, "BAT-004", false);
+    expectRule(result, "BAT-005", null);
+    expectRule(result, "BAT-006", null);
+
+    expectCondition(
+        result,
+        "BAT-006",
+        "estimatedEquipmentCost",
+        true
+    );
+
+    expect(result.manualVerification).toHaveLength(0);
+    expect(result.ruleResults).toHaveLength(6);
+  });
+
+  test("ACC-030 - Unknown equipment cost preserves preliminary eligibility", () => {
+    const result = evaluate(
+        createEligibleBatFacts({
+          estimatedEquipmentCost: null,
+        })
+    );
+
+    expectStatusAndRules(
+        result,
+        "potentially_eligible",
+        ["BAT-001"]
+    );
+
+    expectRule(result, "BAT-001", true);
+    expectRule(result, "BAT-002", false);
+    expectRule(result, "BAT-003", null);
+    expectRule(result, "BAT-004", false);
+    expectRule(result, "BAT-005", false);
+    expectRule(result, "BAT-006", null);
+
+    expectCondition(
+        result,
+        "BAT-003",
+        "estimatedEquipmentCost",
+        null
+    );
+    expectCondition(
+        result,
+        "BAT-006",
+        "estimatedEquipmentCost",
+        null
+    );
+
+    expect(result.manualVerification).toHaveLength(0);
+  });
+
+  test("ACC-031 - High equipment cost and recommendation review both require manual verification", () => {
+    const result = evaluate(
+        createEligibleBatFacts({
+          estimatedEquipmentCost: 25000,
+          batRecommendationOrEquipmentRequiresReview: true,
+        })
+    );
+
+    expectStatusAndRules(
+        result,
+        "manual_verification",
+        ["BAT-001", "BAT-002", "BAT-006"]
+    );
+
+    expectRule(result, "BAT-001", true);
+    expectRule(result, "BAT-002", true);
+    expectRule(result, "BAT-003", false);
+    expectRule(result, "BAT-004", false);
+    expectRule(result, "BAT-005", false);
+    expectRule(result, "BAT-006", true);
+
+    expectCondition(
+        result,
+        "BAT-002",
+        "batRecommendationOrEquipmentRequiresReview",
+        true
+    );
+    expectCondition(
+        result,
+        "BAT-006",
+        "estimatedEquipmentCost",
+        true
+    );
+
+    expect(result.manualVerification.length).toBeGreaterThan(0);
+  });
+
+  test("ACC-032 - High equipment cost does not override special consideration pathway", () => {
+    const result = evaluate(
+        createEligibleBatFacts({
+          monthlyHouseholdIncome: 3000,
+          perCapitaHouseholdIncome: 700,
+          estimatedEquipmentCost: 25000,
+          batSpecialConsiderationRequested: true,
+        })
+    );
+
+    expectStatusAndRules(
+        result,
+        "manual_verification",
+        ["BAT-004"]
+    );
+
+    expectRule(result, "BAT-001", false);
+    expectRule(result, "BAT-002", false);
+    expectRule(result, "BAT-003", false);
+    expectRule(result, "BAT-004", true);
+    expectRule(result, "BAT-005", false);
+    expectRule(result, "BAT-006", false);
+
+    expectCondition(
+        result,
+        "BAT-004",
+        "batSpecialConsiderationRequested",
+        true
+    );
+    expectCondition(
+        result,
+        "BAT-006",
+        "estimatedEquipmentCost",
+        true
+    );
+
+    expect(result.manualVerification.length).toBeGreaterThan(0);
+  });
+
+  test("ACC-033 - Eligibility version 2 contains all six BAT rules", () => {
+    const rules = getBatRules();
+
+    expect(batApiResponse.data.version).toBe(2);
+    expect(batApiResponse.data.criteria.schemaVersion).toBe(1);
+
+    expect(rules).toHaveLength(6);
+
+    expect(rules.map((rule) => rule.id)).toEqual([
+      "BAT-001",
+      "BAT-002",
+      "BAT-003",
+      "BAT-004",
+      "BAT-005",
+      "BAT-006",
+    ]);
+
+    const highCostRule = rules.find(
+        (rule) => rule.id === "BAT-006"
+    );
+
+    expect(highCostRule).toBeDefined();
+    expect(highCostRule?.programCode).toBe("BAT");
+    expect(highCostRule?.outcome).toBe("manual_verification");
   });
 });

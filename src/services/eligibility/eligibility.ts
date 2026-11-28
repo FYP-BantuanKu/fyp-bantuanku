@@ -91,8 +91,18 @@ async function evaluateApplicantProgram(
 
   if (programCode === "BAT" || programCode === "BPT") {
     console.log(`[Eligibility] ${programCode} facts:`, facts);
-    console.log(`[Eligibility] ${programCode} rules:`, rules);
-    console.log(`[Eligibility] ${programCode} result:`, result);
+
+    // console.log(`[Eligibility] ${programCode} rules:`, rules);
+    console.log(
+        `[Eligibility] ${programCode} rules:`,
+        JSON.stringify(rules, null, 2)
+    );
+
+    // console.log(`[Eligibility] ${programCode} result:`, result);
+    console.log(
+        `[Eligibility] ${programCode} result:`,
+        JSON.stringify(result, null, 2)
+    );
   }
 
   return {

@@ -6,8 +6,8 @@ export const batApiResponse: JkmEligibilityApiResponse = {
   data: {
     programCode: "BAT",
     programName: "Bantuan Alat Sokong / Alat Tiruan",
-    version: 1,
-    updatedAt: "2026-10-24 14:42:40",
+    version: 2,
+    updatedAt: "2026-11-28 14:21:47",
 
     criteria: {
       schemaVersion: 1,
@@ -15,7 +15,8 @@ export const batApiResponse: JkmEligibilityApiResponse = {
       source: "BantuanKu V1.0 program specification",
       scope: "preliminary_guidance_only",
       thresholdNotes:
-          "Poor PGK thresholds differ from Hardcore Poor PGK and are not numerically specified in the supplied BAT document. Unresolved threshold references must yield unknown, not false.",
+          "Poor PGK thresholds differ from Hardcore Poor PGK and are not numerically specified in the supplied BAT document. " +
+          "Unresolved threshold references must yield unknown, not false.",
 
       rules: [
         {
@@ -155,6 +156,26 @@ export const batApiResponse: JkmEligibilityApiResponse = {
                 not: {
                   ruleMatched: "BAT-004",
                 },
+              },
+            ],
+          },
+        },
+        {
+          ruleCode: "BAT-006",
+          name: "Equipment Cost Exceeds Assistance Limit",
+          result: "further_assessment_required",
+          assessmentNotes:
+              "The estimated equipment cost exceeds the documented maximum BAT assistance amount. " +
+              "JKM assessment is required to determine the applicable assistance amount and available options.",
+          conditions: {
+            all: [
+              {
+                ruleMatched: "BAT-001",
+              },
+              {
+                field: "application.equipmentCost",
+                operator: "gt",
+                value: 20000,
               },
             ],
           },

@@ -9,7 +9,7 @@ import {
 } from "../../../services/applications/jkm/jkmApplicationService.ts";
 
 import {
-  buildInitialJkmApplicationData,
+  buildPrefilledJkmApplicationData,
   getJkmApplicationData,
   saveJkmApplicationData
 } from "../../../services/applications/jkm/jkmApplicationDataService";
@@ -180,7 +180,7 @@ function JkmApplicationContent({
 
       setApplicationData(
           savedApplicationData ??
-          buildInitialJkmApplicationData(programCode)
+          await buildPrefilledJkmApplicationData(programCode)
       );
 
       setDeclarationAccepted(false);

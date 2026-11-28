@@ -1,17 +1,17 @@
-import { assessApplicantEligibility } from "../../src/services/eligibility/eligibility";
-import { getApplicantEligibilityData } from "../../src/services/eligibility/eligibilityDataService";
-import { getJkmEligibilityCriteria } from "../../src/services/api";
-import type { EligibilityFactsInput } from "../../src/utils/eligibility/eligibilityFacts";
-import { bweApiResponse } from "../fixtures/bweApiResponse";
+import { assessApplicantEligibility } from "../../../src/services/eligibility/eligibility.ts";
+import { getApplicantEligibilityData } from "../../../src/services/eligibility/eligibilityDataService.ts";
+import { getJkmEligibilityCriteria } from "../../../src/services/api";
+import type { EligibilityFactsInput } from "../../../src/utils/eligibility/eligibilityFacts.ts";
+import { bweApiResponse } from "../../fixtures/bweApiResponse.ts";
 
 jest.mock(
-    "../../src/services/eligibility/eligibilityDataService",
+    "../../../src/services/eligibility/eligibilityDataService.ts",
     () => ({
       getApplicantEligibilityData: jest.fn(),
     })
 );
 
-jest.mock("../../src/services/api/jkmApi", () => ({
+jest.mock("../../../src/services/api/jkmApi.ts", () => ({
   getJkmEligibilityCriteria: jest.fn(),
 }));
 

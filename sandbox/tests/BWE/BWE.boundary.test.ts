@@ -1,6 +1,6 @@
-import { evaluateProgramEligibility } from "../../src/utils/eligibility/eligibilityEngine";
-import type { EligibilityFacts, EligibilityStatus } from "../../src/types/eligibility";
-import { bweRules } from "../fixtures/bweRules";
+import { evaluateProgramEligibility } from "../../../src/utils/eligibility/eligibilityEngine.ts";
+import type { EligibilityFacts, EligibilityStatus } from "../../../src/types/eligibility.ts";
+import { bweRules } from "../../fixtures/bweRules.ts";
 
 type RuleMatchState = boolean | null;
 

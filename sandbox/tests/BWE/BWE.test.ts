@@ -1,12 +1,11 @@
 import { describe, expect, test } from "@jest/globals";
-import { adaptJkmEligibilityResponse } from "../../src/adapters/jkmEligibilityAdapter";
-import { evaluateProgramEligibility } from "../../src/utils/eligibility/eligibilityEngine";
-import type { EligibilityFacts, EligibilityStatus } from "../../src/types/eligibility";
-import { bptApiResponse } from "../fixtures/bptApiResponse";
+import { evaluateProgramEligibility } from "../../../src/utils/eligibility/eligibilityEngine.ts";
+import type { EligibilityFacts, EligibilityStatus } from "../../../src/types/eligibility.ts";
+import { bweRules } from "../../fixtures/bweRules.ts";
 
 type RuleMatchState = boolean | null;
 
-interface BptTestCase {
+interface BweTestCase {
   id: string;
   name: string;
   facts: Partial<EligibilityFacts>;
@@ -84,192 +83,129 @@ function createTestFacts(
   };
 }
 
-const testCases: BptTestCase[] = [
+const testCases: BweTestCase[] = [
   {
-    id: "BPT-TC-001",
-    name: "Caregiver Preliminary Match",
+    id: "BWE-TC-001",
+    name: "Preliminary Match",
 
     facts: {
+      age: 65,
+      ageByBirthYear: 65,
       citizenship: "Malaysian",
       residenceCountry: "Malaysia",
-      applicantIsCaregiver: true,
-      applicantIsPatient: false,
-
-      patientIsBedridden: true,
-      patientIsOku: true,
-      patientHasChronicIllness: false,
-
-      caregiverProvidesIntensiveCare: true,
-      monthlyHouseholdIncome: 3000,
+      monthlyHouseholdIncome: 1000,
+      perCapitaHouseholdIncome: 500,
+      residesInExcludedInstitution: false,
+      hasChildren: true,
+      dependsOnFamilyOrCaregiver: false,
     },
 
     expectedStatus: "potentially_eligible",
 
     expectedRuleStates: {
-      "BPT-001": true,
-      "BPT-002": false,
-      "BPT-003": null,
-      "BPT-004": null,
-      "BPT-005": false,
+      "BWE-001": true,
+      "BWE-002": false,
+      "BWE-003": false,
     },
   },
+
   {
-    id: "BPT-TC-002",
-    name: "Non-Bedridden Chronic Patient Preliminary Match",
-
-    facts: {
-      citizenship: "Malaysian",
-      residenceCountry: "Malaysia",
-      applicantIsPatient: true,
-      applicantIsCaregiver: false,
-
-      patientIsBedridden: false,
-      patientHasChronicIllness: true,
-      patientRequiresContinuousTreatment: true,
-      patientContinuousTreatmentMonths: 4,
-
-      monthlyHouseholdIncome: 4000,
-    },
-
-    expectedStatus: "potentially_eligible",
-
-    expectedRuleStates: {
-      "BPT-001": false,
-      "BPT-002": true,
-      "BPT-003": false,
-      "BPT-004": null,
-      "BPT-005": false,
-    },
-  },
-  {
-    id: "BPT-TC-003",
-    name: "Bedridden Patient Without Caregiver",
-
-    facts: {
-      citizenship: "Malaysian",
-      residenceCountry: "Malaysia",
-      applicantIsPatient: true,
-      applicantIsCaregiver: false,
-
-      patientCitizenship: "Malaysian",
-      patientResidenceCountry: "Malaysia",
-      patientIsBedridden: true,
-      patientIsOku: true,
-      patientHasChronicIllness: false,
-
-      hasCaregiver: false,
-      monthlyHouseholdIncome: 2500,
-    },
-
-    expectedStatus: "potentially_eligible",
-
-    expectedRuleStates: {
-      "BPT-001": false,
-      "BPT-002": false,
-      "BPT-003": true,
-      "BPT-004": null,
-      "BPT-005": false,
-    },
-  },
-  {
-    id: "BPT-TC-004",
-    name: "Further Assessment Required",
-
-    facts: {
-      citizenship: "Malaysian",
-      residenceCountry: "Malaysia",
-      applicantIsCaregiver: true,
-      applicantIsPatient: false,
-
-      patientIsBedridden: true,
-      patientIsOku: true,
-      patientHasChronicIllness: false,
-
-      caregiverProvidesIntensiveCare: true,
-      monthlyHouseholdIncome: 3000,
-
-      bptMedicalOrCaregiverReviewRequired: true,
-    },
-
-    expectedStatus: "manual_verification",
-
-    expectedRuleStates: {
-      "BPT-001": true,
-      "BPT-002": false,
-      "BPT-003": null,
-      "BPT-004": true,
-      "BPT-005": false,
-    },
-  },
-  {
-    id: "BPT-TC-005",
+    id: "BWE-TC-002",
     name: "No Preliminary Match",
 
     facts: {
+      age: 45,
+      ageByBirthYear: 45,
       citizenship: "Malaysian",
       residenceCountry: "Malaysia",
-      applicantIsCaregiver: false,
-      applicantIsPatient: false,
-
-      patientCitizenship: "Malaysian",
-      patientResidenceCountry: "Malaysia",
-      patientIsBedridden: false,
-      patientIsOku: false,
-      patientHasChronicIllness: false,
-
-      caregiverProvidesIntensiveCare: false,
-      hasCaregiver: true,
-      caregiverCitizenship: "Malaysian",
-
-      monthlyHouseholdIncome: 6000,
     },
 
     expectedStatus: "potentially_ineligible",
 
     expectedRuleStates: {
-      "BPT-001": false,
-      "BPT-002": false,
-      "BPT-003": false,
-      "BPT-004": false,
-      "BPT-005": true,
+      "BWE-001": false,
+      "BWE-002": false,
+      "BWE-003": true,
     },
   },
+
   {
-    id: "BPT-TC-006",
-    name: "Insufficient Patient Information",
+    id: "BWE-TC-003",
+    name: "Insufficient Information",
 
     facts: {
+      age: 65,
+      ageByBirthYear: 65,
       citizenship: "Malaysian",
       residenceCountry: "Malaysia",
-      applicantIsPatient: true,
-      applicantIsCaregiver: false,
-
-      patientIsBedridden: null,
-      patientHasChronicIllness: null,
-      patientRequiresContinuousTreatment: null,
-      patientContinuousTreatmentMonths: null,
-
-      monthlyHouseholdIncome: 3000,
     },
 
     expectedStatus: "insufficient_information",
 
     expectedRuleStates: {
-      "BPT-001": false,
-      "BPT-002": null,
-      "BPT-003": null,
-      "BPT-004": null,
-      "BPT-005": null,
+      "BWE-001": null,
+      "BWE-002": null,
+      "BWE-003": null,
+    },
+  },
+
+  {
+    id: "BWE-TC-004",
+    name: "Manual Verification",
+
+    facts: {
+      age: 65,
+      ageByBirthYear: 65,
+      citizenship: "Malaysian",
+      residenceCountry: "Malaysia",
+
+      hasChildren: false,
+      dependsOnFamilyOrCaregiver: true,
+      familyOrCaregiverIncomeExceedsPgk: true,
+      residesInExcludedInstitution: false,
+
+      monthlyHouseholdIncome: 2000,
+      perCapitaHouseholdIncome: 1000,
+    },
+
+    expectedStatus: "manual_verification",
+
+    expectedRuleStates: {
+      "BWE-001": false,
+      "BWE-002": true,
+      "BWE-003": false,
+    },
+  },
+
+  {
+    id: "BWE-TC-005",
+    name: "Unknown Rule Dependencies",
+
+    facts: {
+      age: 65,
+      ageByBirthYear: 65,
+      citizenship: "Malaysian",
+      residenceCountry: "Malaysia",
+
+      monthlyHouseholdIncome: null,
+      perCapitaHouseholdIncome: null,
+      hasChildren: null,
+      dependsOnFamilyOrCaregiver: null,
+      familyOrCaregiverIncomeExceedsPgk: null,
+      residesInExcludedInstitution: null,
+    },
+
+    expectedStatus: "insufficient_information",
+
+    expectedRuleStates: {
+      "BWE-001": null,
+      "BWE-002": null,
+      "BWE-003": null,
     },
   },
 ];
 
-const bptRules = adaptJkmEligibilityResponse(
-    bptApiResponse,
-    "BPT"
-);
-
-describe("BantuanKu - BPT Eligibility Engine", () => {
+describe("BantuanKu - BWE Eligibility Engine", () => {
   test.each(testCases)(
       "$id - $name",
       ({
@@ -278,8 +214,8 @@ describe("BantuanKu - BPT Eligibility Engine", () => {
          expectedRuleStates,
        }) => {
         const result = evaluateProgramEligibility(
-            "BPT",
-            bptRules,
+            "BWE",
+            bweRules,
             createTestFacts(facts)
         );
 
@@ -306,7 +242,7 @@ describe("BantuanKu - BPT Eligibility Engine", () => {
             expectedMatchedRuleIds
         );
 
-        expect(result.ruleResults).toHaveLength(5);
+        expect(result.ruleResults).toHaveLength(3);
       }
   );
 });

@@ -1,9 +1,9 @@
 import { describe, expect, test } from "@jest/globals";
-import { adaptJkmEligibilityResponse } from "../../src/adapters/jkmEligibilityAdapter";
-import { evaluateProgramEligibility } from "../../src/utils/eligibility/eligibilityEngine";
-import type { EligibilityFacts, EligibilityRule, EligibilityStatus } from "../../src/types/eligibility";
-import type { EligibilityThresholds } from "../../src/utils/eligibility/eligibilityThresholds";
-import { bweApiResponse } from "../fixtures/bweApiResponse";
+import { adaptJkmEligibilityResponse } from "../../../src/adapters/jkmEligibilityAdapter.ts";
+import { evaluateProgramEligibility } from "../../../src/utils/eligibility/eligibilityEngine.ts";
+import type { EligibilityFacts, EligibilityRule, EligibilityStatus } from "../../../src/types/eligibility.ts";
+import type { EligibilityThresholds } from "../../../src/utils/eligibility/eligibilityThresholds.ts";
+import { bweApiResponse } from "../../fixtures/bweApiResponse.ts";
 
 function createEligibleBweFacts(overrides: Partial<EligibilityFacts> = {}): EligibilityFacts {
   return {

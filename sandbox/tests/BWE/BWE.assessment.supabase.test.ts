@@ -1,11 +1,11 @@
-import { supabaseTestClient } from "../helpers/supabaseTestClient";
-import { assessApplicantEligibility, ApplicantEligibilityAssessment } from "../../src/services/eligibility/eligibility";
-import { getApplicantEligibilityData } from "../../src/services/eligibility/eligibilityDataService";
-import { buildEligibilityFacts } from "../../src/utils/eligibility/eligibilityFacts";
-import { evaluateProgramEligibility } from "../../src/utils/eligibility/eligibilityEngine";
+import { supabaseTestClient } from "../../helpers/supabaseTestClient.ts";
+import { assessApplicantEligibility, ApplicantEligibilityAssessment } from "../../../src/services/eligibility/eligibility.ts";
+import { getApplicantEligibilityData } from "../../../src/services/eligibility/eligibilityDataService.ts";
+import { buildEligibilityFacts } from "../../../src/utils/eligibility/eligibilityFacts.ts";
+import { evaluateProgramEligibility } from "../../../src/utils/eligibility/eligibilityEngine.ts";
 import { jest } from "@jest/globals";
 
-jest.mock("../../src/lib/supabase", () => {
+jest.mock("../../../src/lib/supabase.ts", () => {
   const { supabaseTestClient } = require(
       "../helpers/supabaseTestClient"
   );

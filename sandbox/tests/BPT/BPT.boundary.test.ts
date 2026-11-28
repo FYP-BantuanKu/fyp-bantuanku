@@ -1,11 +1,11 @@
 import { describe, expect, test } from "@jest/globals";
-import { adaptJkmEligibilityResponse } from "../../src/adapters/jkmEligibilityAdapter";
-import { evaluateProgramEligibility } from "../../src/utils/eligibility/eligibilityEngine";
+import { adaptJkmEligibilityResponse } from "../../../src/adapters/jkmEligibilityAdapter.ts";
+import { evaluateProgramEligibility } from "../../../src/utils/eligibility/eligibilityEngine.ts";
 import type {
   EligibilityFacts,
   EligibilityStatus,
-} from "../../src/types/eligibility";
-import { bptApiResponse } from "../fixtures/bptApiResponse";
+} from "../../../src/types/eligibility.ts";
+import { bptApiResponse } from "../../fixtures/bptApiResponse.ts";
 
 type RuleMatchState = boolean | null;
 

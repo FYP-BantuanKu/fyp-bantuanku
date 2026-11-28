@@ -1,10 +1,10 @@
 import { describe, expect, test } from "@jest/globals";
-import { evaluateProgramEligibility } from "../../src/utils/eligibility/eligibilityEngine";
+import { evaluateProgramEligibility } from "../../../src/utils/eligibility/eligibilityEngine.ts";
 import type {
   EligibilityFacts,
   EligibilityStatus,
-} from "../../src/types/eligibility";
-import { baRules } from "../fixtures/baRules";
+} from "../../../src/types/eligibility.ts";
+import { baRules } from "../../fixtures/baRules.ts";
 
 type RuleMatchState = boolean | null;
 

@@ -1,19 +1,19 @@
-import { getApplicantEligibilityData } from "../../src/services/eligibility/eligibilityDataService";
-import { buildEligibilityFacts, type EligibilityFactsInput } from "../../src/utils/eligibility/eligibilityFacts";
-import { adaptJkmEligibilityResponse } from "../../src/adapters/jkmEligibilityAdapter";
-import { evaluateProgramEligibility } from "../../src/utils/eligibility/eligibilityEngine";
-import type { JkmEligibilityApiResponse } from "../../src/adapters/jkmEligibilityAdapter";
-import { supabase } from "../../src/lib/supabase";
-import { getCurrentProfileId } from "../../src/services/profile/profileService";
-import { bweApiResponse } from "../fixtures/bweApiResponse";
+import { getApplicantEligibilityData } from "../../../src/services/eligibility/eligibilityDataService.ts";
+import { buildEligibilityFacts, type EligibilityFactsInput } from "../../../src/utils/eligibility/eligibilityFacts.ts";
+import { adaptJkmEligibilityResponse } from "../../../src/adapters/jkmEligibilityAdapter.ts";
+import { evaluateProgramEligibility } from "../../../src/utils/eligibility/eligibilityEngine.ts";
+import type { JkmEligibilityApiResponse } from "../../../src/adapters/jkmEligibilityAdapter.ts";
+import { supabase } from "../../../src/lib/supabase.ts";
+import { getCurrentProfileId } from "../../../src/services/profile/profileService.ts";
+import { bweApiResponse } from "../../fixtures/bweApiResponse.ts";
 
-jest.mock("../../src/lib/supabase", () => ({
+jest.mock("../../../src/lib/supabase.ts", () => ({
   supabase: {
     from: jest.fn(),
   },
 }));
 
-jest.mock("../../src/services/profile/profileService", () => ({
+jest.mock("../../../src/services/profile/profileService.ts", () => ({
   getCurrentProfileId: jest.fn(),
 }));
 

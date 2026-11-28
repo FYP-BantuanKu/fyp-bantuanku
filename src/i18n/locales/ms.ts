@@ -544,6 +544,13 @@ const ms = {
         disclaimer: "Penilaian awal ini disediakan oleh BantuanKu dan tidak mewakili keputusan rasmi permohonan STR.",
       },
 
+      actions: {
+        resumeApplication: "Sambung Permohonan",
+        viewApplication: "Lihat Permohonan",
+        checkSubmission: "Semak Penghantaran",
+        recoverSubmission: "Pulihkan Penghantaran",
+      },
+
       str: {
         title: "Permohonan STR",
         description: "Semak maklumat anda sebelum menghantar permohonan STR.",
@@ -795,37 +802,39 @@ const ms = {
 
           bat: {
             title: "Bantuan Alat Tiruan / Alat Sokongan",
-            description: "Berikan maklumat tentang penerima bantuan, peralatan yang dipohon dan sokongan pengesyoran.",
+            description: "Beritahu kami siapa yang memerlukan peralatan dan jenis peralatan yang diperlukan.",
 
             sections: {
               beneficiary: "Maklumat Penerima Bantuan",
-              beneficiaryHealth: "Maklumat Kesihatan Penerima Bantuan",
+              beneficiaryHealth: "Maklumat Kesihatan Penerima",
               functionalLimitations: "Batasan Fungsi",
               equipment: "Maklumat Peralatan",
-              recommendation: "Maklumat Pengesyoran",
+              recommendation: "Maklumat Sokongan",
               additionalJustification: "Justifikasi Tambahan",
+              additionalInformation: "Maklumat Tambahan",
             },
 
             fields: {
-              beneficiaryType: "Siapakah yang akan menerima peralatan yang dipohon?",
-              fullName: "Nama Penuh Penerima Bantuan",
-              identificationNo: "Nombor Pengenalan Penerima Bantuan",
-              relationshipToApplicant: "Hubungan dengan Pemohon",
+              beneficiaryType: "Siapa yang memerlukan peralatan ini?",
+              fullName: "Nama Penuh Penerima",
+              identificationNo: "Nombor Pengenalan Penerima",
+              relationshipToApplicant: "Hubungan dengan Anda",
 
-              functionalLimitationDescription: "Terangkan batasan fungsi penerima bantuan.",
+              functionalLimitationDescription: "Terangkan batasan keupayaan penerima dalam menjalankan aktiviti harian.",
 
               equipmentType: "Jenis Peralatan",
-              equipmentDescription: "Keterangan Peralatan",
-              purpose: "Tujuan Penggunaan Peralatan",
-              estimatedCost: "Anggaran Kos Peralatan (RM)",
+              otherEquipmentType: "Nyatakan Jenis Peralatan",
+              equipmentDescription: "Penerangan Peralatan",
+              purpose: "Mengapa peralatan ini diperlukan?",
+              estimatedCost: "Anggaran Kos (RM)",
               supplierName: "Nama Pembekal",
-              quotationAvailable: "Adakah sebut harga peralatan tersedia?",
+              quotationAvailable: "Adakah anda mempunyai sebut harga?",
 
-              recommendationAvailable: "Adakah pengesyoran sokongan tersedia?",
-              recommendingAuthority: "Pihak yang Memberikan Pengesyoran",
-              recommendationOfficerName: "Nama Pegawai yang Memberikan Pengesyoran",
-              recommendationInstitution: "Institusi yang Memberikan Pengesyoran",
-              recommendationDetails: "Butiran Pengesyoran",
+              recommendationAvailable: "Adakah anda mempunyai syor sokongan?",
+              recommendingAuthority: "Siapa yang mengesyorkan peralatan ini?",
+              recommendationOfficerName: "Nama Pegawai yang Mengesyorkan",
+              recommendationInstitution: "Institusi yang Mengesyorkan",
+              recommendationDetails: "Butiran Syor",
 
               additionalJustification: "Justifikasi Tambahan Peralatan",
             },
@@ -836,6 +845,15 @@ const ms = {
                 dependent: "Tanggungan Saya",
               },
 
+              equipmentType: {
+                wheelchair: "Kerusi Roda",
+                hearingAid: "Alat Bantu Pendengaran",
+                walkingAid: "Alat Bantu Berjalan",
+                prostheticLimb: "Anggota Tiruan",
+                orthoticDevice: "Alat Ortotik",
+                other: "Peralatan Lain",
+              },
+
               recommendingAuthority: {
                 medicalOfficer: "Pegawai Perubatan",
                 jkmOfficer: "Pegawai JKM",
@@ -844,25 +862,25 @@ const ms = {
             },
 
             messages: {
-              applicantBeneficiary: "Maklumat peribadi dan kesihatan anda akan digunakan sebagai maklumat penerima bantuan.",
-              dependentBeneficiary: "Berikan maklumat tanggungan yang menerima bantuan. Maklumat kesihatan anda sendiri tidak akan digunakan untuk individu ini.",
+              applicantBeneficiary: "Kami akan menggunakan maklumat profil anda yang sedia ada.",
+              dependentBeneficiary: "Masukkan maklumat individu yang memerlukan peralatan ini.",
 
               highCostEquipment: "Peralatan yang melebihi RM20,000 memerlukan justifikasi tambahan.",
-              recommendationVerification: "JKM mungkin perlu mengesahkan pengesyoran dan peralatan yang dipohon.",
+              recommendationVerification: "JKM mungkin perlu mengesahkan syor dan peralatan yang dimohon.",
             },
 
             validation: {
               beneficiaryTypeRequired: "Sila pilih jenis penerima bantuan.",
-              beneficiaryNameRequired: "Sila berikan nama penuh penerima bantuan.",
-              beneficiaryRelationshipRequired: "Sila nyatakan hubungan penerima bantuan dengan anda.",
-              dependentIdentificationConflict: "Nombor pengenalan tanggungan mestilah berbeza daripada nombor pengenalan pemohon.",
+              beneficiaryNameRequired: "Sila masukkan nama penuh penerima.",
+              beneficiaryRelationshipRequired: "Sila nyatakan hubungan penerima dengan anda.",
+              dependentIdentificationConflict: "Nombor pengenalan penerima tanggungan tidak boleh sama dengan nombor pengenalan pemohon.",
 
               equipmentTypeRequired: "Sila nyatakan jenis peralatan.",
-              equipmentDescriptionRequired: "Sila terangkan peralatan yang dipohon.",
-              equipmentPurposeRequired: "Sila terangkan tujuan penggunaan peralatan yang dipohon.",
+              equipmentDescriptionRequired: "Sila terangkan peralatan yang dimohon.",
+              equipmentPurposeRequired: "Sila nyatakan tujuan peralatan yang dimohon.",
 
-              recommendingAuthorityRequired: "Sila nyatakan pihak yang memberikan pengesyoran.",
-              recommendationDetailsRequired: "Sila berikan butiran pihak yang memberikan pengesyoran.",
+              recommendingAuthorityRequired: "Sila nyatakan pihak yang mengesyorkan peralatan.",
+              recommendationDetailsRequired: "Sila berikan butiran pihak yang mengesyorkan peralatan.",
               additionalJustificationRequired: "Justifikasi tambahan diperlukan bagi peralatan yang melebihi RM20,000.",
             },
           },

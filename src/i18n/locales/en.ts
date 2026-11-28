@@ -542,6 +542,13 @@ const en = {
         disclaimer: "This preliminary assessment is provided by BantuanKu and does not represent an official STR application decision.",
       },
 
+      actions: {
+        resumeApplication: "Resume Application",
+        viewApplication: "View Application",
+        checkSubmission: "Check Submission",
+        recoverSubmission: "Recover Submission",
+      },
+
       str: {
         title: "STR Application",
         description: "Review your information before submitting your STR application.",
@@ -793,7 +800,7 @@ const en = {
 
           bat: {
             title: "Bantuan Alat Tiruan / Alat Sokongan",
-            description: "Provide information about the beneficiary, requested equipment and supporting recommendation.",
+            description: "Tell us who needs the equipment and what equipment is needed.",
 
             sections: {
               beneficiary: "Beneficiary Information",
@@ -802,25 +809,27 @@ const en = {
               equipment: "Equipment Information",
               recommendation: "Recommendation Information",
               additionalJustification: "Additional Justification",
+              additionalInformation: "Additional Information",
             },
 
             fields: {
-              beneficiaryType: "Who will receive the requested equipment?",
+              beneficiaryType: "Who needs the equipment?",
               fullName: "Beneficiary Full Name",
               identificationNo: "Beneficiary Identification Number",
-              relationshipToApplicant: "Relationship to Applicant",
+              relationshipToApplicant: "Relationship to You",
 
               functionalLimitationDescription: "Describe the beneficiary's functional limitations.",
 
               equipmentType: "Equipment Type",
+              otherEquipmentType: "Specify Equipment Type",
               equipmentDescription: "Equipment Description",
-              purpose: "Purpose of Equipment",
-              estimatedCost: "Estimated Equipment Cost (RM)",
+              purpose: "Why is this equipment needed?",
+              estimatedCost: "Estimated Cost (RM)",
               supplierName: "Supplier Name",
-              quotationAvailable: "Is an equipment quotation available?",
+              quotationAvailable: "Do you have a quotation?",
 
-              recommendationAvailable: "Is a supporting recommendation available?",
-              recommendingAuthority: "Recommending Authority",
+              recommendationAvailable: "Do you have a recommendation?",
+              recommendingAuthority: "Who recommended the equipment?",
               recommendationOfficerName: "Recommending Officer's Name",
               recommendationInstitution: "Recommending Institution",
               recommendationDetails: "Recommendation Details",
@@ -834,6 +843,15 @@ const en = {
                 dependent: "My Dependent",
               },
 
+              equipmentType: {
+                wheelchair: "Wheelchair",
+                hearingAid: "Hearing Aid",
+                walkingAid: "Walking Aid",
+                prostheticLimb: "Prosthetic Limb",
+                orthoticDevice: "Orthotic Device",
+                other: "Other Equipment",
+              },
+
               recommendingAuthority: {
                 medicalOfficer: "Medical Officer",
                 jkmOfficer: "JKM Officer",
@@ -842,8 +860,8 @@ const en = {
             },
 
             messages: {
-              applicantBeneficiary: "Your personal and health information will be used for the beneficiary.",
-              dependentBeneficiary: "Provide the dependent beneficiary's information. Your own health information will not be used for this person.",
+              applicantBeneficiary: "We will use your existing profile information.",
+              dependentBeneficiary: "Enter the details of the person who needs the equipment.",
 
               highCostEquipment: "Equipment exceeding RM20,000 requires additional justification.",
               recommendationVerification: "JKM may need to verify the recommendation and requested equipment.",

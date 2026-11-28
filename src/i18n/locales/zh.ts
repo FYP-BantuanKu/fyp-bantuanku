@@ -549,6 +549,13 @@ const zh = {
         disclaimer: "此初步资格评估由 BantuanKu 提供，并不代表 STR 的正式申请结果。",
       },
 
+      actions: {
+        resumeApplication: "继续申请",
+        viewApplication: "查看申请",
+        checkSubmission: "检查提交状态",
+        recoverSubmission: "恢复提交",
+      },
+
       str: {
         title: "STR 援助申请",
         description: "提交 STR 申请前，请先核对您的资料。",
@@ -799,40 +806,42 @@ const zh = {
           },
 
           bat: {
-            title: "义肢及辅助器具援助（Bantuan Alat Tiruan / Alat Sokongan）",
-            description: "请提供受益人、所申请的辅助器具及相关推荐资料。",
+            title: "假肢及辅助器具援助金（BAT）",
+            description: "请告诉我们谁需要辅助器具，以及需要哪种器具。",
 
             sections: {
-              beneficiary: "受益人资料",
-              beneficiaryHealth: "受益人健康资料",
-              functionalLimitations: "身体功能受限情况",
+              beneficiary: "受助人资料",
+              beneficiaryHealth: "受助人健康资料",
+              functionalLimitations: "日常活动限制",
               equipment: "辅助器具资料",
               recommendation: "推荐资料",
-              additionalJustification: "额外申请理由",
+              additionalJustification: "补充理由",
+              additionalInformation: "补充资料",
             },
 
             fields: {
-              beneficiaryType: "谁将使用所申请的辅助器具？",
-              fullName: "受益人姓名",
-              identificationNo: "受益人身份证明号码",
-              relationshipToApplicant: "与申请人的关系",
+              beneficiaryType: "谁需要使用辅助器具？",
+              fullName: "受助人全名",
+              identificationNo: "受助人身份证号码",
+              relationshipToApplicant: "与您的关系",
 
-              functionalLimitationDescription: "请说明受益人的身体功能受限情况。",
+              functionalLimitationDescription: "请描述受助人在日常活动中遇到的困难。",
 
-              equipmentType: "辅助器具类型",
-              equipmentDescription: "辅助器具说明",
-              purpose: "辅助器具用途",
-              estimatedCost: "预计器具费用（RM）",
+              equipmentType: "器具类型",
+              otherEquipmentType: "请注明器具类型",
+              equipmentDescription: "器具说明",
+              purpose: "为什么需要此器具？",
+              estimatedCost: "预计费用（RM）",
               supplierName: "供应商名称",
-              quotationAvailable: "是否已有辅助器具报价单？",
+              quotationAvailable: "您是否有报价单？",
 
-              recommendationAvailable: "是否已有相关推荐证明？",
-              recommendingAuthority: "推荐方",
+              recommendationAvailable: "您是否获得相关人员的推荐？",
+              recommendingAuthority: "谁推荐使用此器具？",
               recommendationOfficerName: "推荐人员姓名",
               recommendationInstitution: "推荐机构",
               recommendationDetails: "推荐详情",
 
-              additionalJustification: "辅助器具额外申请理由",
+              additionalJustification: "申请器具的补充理由",
             },
 
             options: {
@@ -841,34 +850,43 @@ const zh = {
                 dependent: "我的受抚养人",
               },
 
+              equipmentType: {
+                wheelchair: "轮椅",
+                hearingAid: "助听器",
+                walkingAid: "助行器具",
+                prostheticLimb: "假肢",
+                orthoticDevice: "矫形器具",
+                other: "其他辅助器具",
+              },
+
               recommendingAuthority: {
                 medicalOfficer: "医务人员",
-                jkmOfficer: "JKM 官员",
+                jkmOfficer: "社会福利局（JKM）官员",
                 other: "其他",
               },
             },
 
             messages: {
-              applicantBeneficiary: "您的个人资料及健康资料将作为受益人的资料使用。",
-              dependentBeneficiary: "请提供受抚养人的资料。您的个人健康资料不会用于该受益人。",
+              applicantBeneficiary: "我们将使用您现有的个人资料。",
+              dependentBeneficiary: "请输入需要使用辅助器具的人士资料。",
 
-              highCostEquipment: "费用超过 RM20,000 的辅助器具需要提供额外申请理由。",
-              recommendationVerification: "JKM 可能需要核实推荐资料及所申请的辅助器具。",
+              highCostEquipment: "费用超过 RM20,000 的器具需要提供补充理由。",
+              recommendationVerification: "社会福利局（JKM）可能需要核实推荐资料及所申请的器具。",
             },
 
             validation: {
-              beneficiaryTypeRequired: "请选择受益人类型。",
-              beneficiaryNameRequired: "请输入受益人的姓名。",
-              beneficiaryRelationshipRequired: "请注明受益人与您的关系。",
-              dependentIdentificationConflict: "受抚养人的身份证明号码不得与申请人的身份证明号码相同。",
+              beneficiaryTypeRequired: "请选择受助人类型。",
+              beneficiaryNameRequired: "请输入受助人的全名。",
+              beneficiaryRelationshipRequired: "请注明受助人与您的关系。",
+              dependentIdentificationConflict: "受抚养人的身份证号码不可与申请人的身份证号码相同。",
 
-              equipmentTypeRequired: "请注明辅助器具类型。",
-              equipmentDescriptionRequired: "请说明所申请的辅助器具。",
-              equipmentPurposeRequired: "请说明所申请辅助器具的用途。",
+              equipmentTypeRequired: "请注明所需的器具类型。",
+              equipmentDescriptionRequired: "请描述所申请的器具。",
+              equipmentPurposeRequired: "请说明申请此器具的用途。",
 
-              recommendingAuthorityRequired: "请注明推荐方。",
-              recommendationDetailsRequired: "请提供推荐方的详细资料。",
-              additionalJustificationRequired: "费用超过 RM20,000 的辅助器具必须提供额外申请理由。",
+              recommendingAuthorityRequired: "请注明推荐使用此器具的人员或机构。",
+              recommendationDetailsRequired: "请提供推荐人员或机构的详细资料。",
+              additionalJustificationRequired: "费用超过 RM20,000 的器具必须提供补充理由。",
             },
           },
 

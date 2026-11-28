@@ -129,6 +129,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -148,6 +149,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -167,6 +169,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": true,
+      "BAT-006": false,
     },
   },
 
@@ -189,6 +192,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -209,6 +213,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -229,6 +234,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": true,
+      "BAT-006": false,
     },
   },
 
@@ -250,6 +256,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -270,6 +277,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -290,6 +298,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": true,
+      "BAT-006": false,
     },
   },
 
@@ -310,6 +319,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -329,6 +339,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": true,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -348,18 +359,19 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": true,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
   {
     id: "BAT-BT-013",
-    name: "Equipment Cost RM20,001 - Outside Further Approval Range",
+    name: "Equipment Cost RM20,001 - Exceeds Assistance Limit",
 
     overrides: {
       estimatedEquipmentCost: 20001,
     },
 
-    expectedStatus: "potentially_eligible",
+    expectedStatus: "manual_verification",
 
     expectedRuleStates: {
       "BAT-001": true,
@@ -367,6 +379,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": true,
     },
   },
 
@@ -387,6 +400,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -406,6 +420,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": true,
+      "BAT-006": false,
     },
   },
 
@@ -425,6 +440,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": null,
+      "BAT-006": false,
     },
   },
 
@@ -445,6 +461,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -464,6 +481,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": true,
+      "BAT-006": false,
     },
   },
 
@@ -483,6 +501,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": null,
+      "BAT-006": false,
     },
   },
 
@@ -503,6 +522,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -522,6 +542,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": true,
+      "BAT-006": false,
     },
   },
 
@@ -541,6 +562,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": null,
+      "BAT-006": false,
     },
   },
 
@@ -561,6 +583,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -580,6 +603,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": true,
+      "BAT-006": false,
     },
   },
 
@@ -599,6 +623,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": null,
+      "BAT-006": false,
     },
   },
 
@@ -620,6 +645,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -640,6 +666,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": null,
+      "BAT-006": false,
     },
   },
 
@@ -660,6 +687,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": null,
+      "BAT-006": false,
     },
   },
 
@@ -680,6 +708,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": null,
+      "BAT-006": false,
     },
   },
 
@@ -704,6 +733,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -728,6 +758,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": null,
+      "BAT-006": false,
     },
   },
 
@@ -748,6 +779,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -767,6 +799,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -789,6 +822,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": true,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -810,6 +844,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": null,
       "BAT-005": null,
+      "BAT-006": false,
     },
   },
 
@@ -828,6 +863,7 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": false,
+      "BAT-006": false,
     },
   },
 
@@ -848,6 +884,193 @@ const boundaryTestCases: BoundaryTestCase[] = [
       "BAT-003": false,
       "BAT-004": false,
       "BAT-005": null,
+      "BAT-006": false,
+    },
+  },
+
+  // Equipment cost precision boundaries
+  {
+    id: "BAT-BT-038",
+    name: "Equipment Cost RM9,999.99 - Below Standard Limit",
+
+    overrides: {
+      estimatedEquipmentCost: 9999.99,
+    },
+
+    expectedStatus: "potentially_eligible",
+
+    expectedRuleStates: {
+      "BAT-001": true,
+      "BAT-002": false,
+      "BAT-003": false,
+      "BAT-004": false,
+      "BAT-005": false,
+      "BAT-006": false,
+    },
+  },
+
+  {
+    id: "BAT-BT-039",
+    name: "Equipment Cost RM10,000.01 - Above Standard Limit",
+
+    overrides: {
+      estimatedEquipmentCost: 10000.01,
+    },
+
+    expectedStatus: "manual_verification",
+
+    expectedRuleStates: {
+      "BAT-001": true,
+      "BAT-002": false,
+      "BAT-003": true,
+      "BAT-004": false,
+      "BAT-005": false,
+      "BAT-006": false,
+    },
+  },
+
+  {
+    id: "BAT-BT-040",
+    name: "Equipment Cost RM12,500 - Higher Approval Required",
+
+    overrides: {
+      estimatedEquipmentCost: 12500,
+    },
+
+    expectedStatus: "manual_verification",
+
+    expectedRuleStates: {
+      "BAT-001": true,
+      "BAT-002": false,
+      "BAT-003": true,
+      "BAT-004": false,
+      "BAT-005": false,
+      "BAT-006": false,
+    },
+  },
+
+  {
+    id: "BAT-BT-041",
+    name: "Equipment Cost RM19,999.99 - Below Maximum Assistance Limit",
+
+    overrides: {
+      estimatedEquipmentCost: 19999.99,
+    },
+
+    expectedStatus: "manual_verification",
+
+    expectedRuleStates: {
+      "BAT-001": true,
+      "BAT-002": false,
+      "BAT-003": true,
+      "BAT-004": false,
+      "BAT-005": false,
+      "BAT-006": false,
+    },
+  },
+
+  {
+    id: "BAT-BT-042",
+    name: "Equipment Cost RM20,000.01 - Above Maximum Assistance Limit",
+
+    overrides: {
+      estimatedEquipmentCost: 20000.01,
+    },
+
+    expectedStatus: "manual_verification",
+
+    expectedRuleStates: {
+      "BAT-001": true,
+      "BAT-002": false,
+      "BAT-003": false,
+      "BAT-004": false,
+      "BAT-005": false,
+      "BAT-006": true,
+    },
+  },
+
+  {
+    id: "BAT-BT-043",
+    name: "Equipment Cost RM25,000 - Further Assessment Required",
+
+    overrides: {
+      estimatedEquipmentCost: 25000,
+    },
+
+    expectedStatus: "manual_verification",
+
+    expectedRuleStates: {
+      "BAT-001": true,
+      "BAT-002": false,
+      "BAT-003": false,
+      "BAT-004": false,
+      "BAT-005": false,
+      "BAT-006": true,
+    },
+  },
+
+  // BAT-006 rule dependencies
+  {
+    id: "BAT-BT-044",
+    name: "Equipment Cost RM25,000 - Preliminary Eligibility Not Satisfied",
+
+    overrides: {
+      estimatedEquipmentCost: 25000,
+      isJkmTargetGroup: false,
+    },
+
+    expectedStatus: "potentially_ineligible",
+
+    expectedRuleStates: {
+      "BAT-001": false,
+      "BAT-002": false,
+      "BAT-003": false,
+      "BAT-004": false,
+      "BAT-005": true,
+      "BAT-006": false,
+    },
+  },
+
+  {
+    id: "BAT-BT-045",
+    name: "Equipment Cost RM25,000 - Unresolved PGK Thresholds",
+
+    overrides: {
+      estimatedEquipmentCost: 25000,
+    },
+
+    thresholds: {},
+
+    expectedStatus: "insufficient_information",
+
+    expectedRuleStates: {
+      "BAT-001": null,
+      "BAT-002": false,
+      "BAT-003": false,
+      "BAT-004": false,
+      "BAT-005": null,
+      "BAT-006": null,
+    },
+  },
+
+  // Optional equipment cost
+  {
+    id: "BAT-BT-046",
+    name: "Unknown Equipment Cost - Preliminary Eligibility Satisfied",
+
+    overrides: {
+      estimatedEquipmentCost: null,
+    },
+
+    expectedStatus: "potentially_eligible",
+
+    expectedRuleStates: {
+      "BAT-001": true,
+      "BAT-002": false,
+      "BAT-003": null,
+      "BAT-004": false,
+      "BAT-005": false,
+      "BAT-006": null,
     },
   },
 ];
@@ -894,7 +1117,9 @@ describe("BantuanKu - BAT Boundary Testing", () => {
             expectedMatchedRuleIds
         );
 
-        expect(result.ruleResults).toHaveLength(5);
+        expect(Object.keys(expectedRuleStates)).toHaveLength(6);
+
+        expect(result.ruleResults).toHaveLength(6);
       }
   );
 });

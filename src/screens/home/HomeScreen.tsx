@@ -482,7 +482,7 @@ export default function HomeScreen({
               </Text>
 
               <Text className="text-sm text-muted-foreground">
-                Test the BA application workflow, including draft creation,
+                Test the BAT application workflow, including draft creation,
                 applicant information validation, submission to the JKM
                 Mock Web, and application status synchronization.
               </Text>
@@ -491,15 +491,16 @@ export default function HomeScreen({
             <Pressable
                 onPress={() =>
                     navigation.navigate("JkmApplication", {
-                      programCode: "BA",
+                      // programCode: "BA",
+                      programCode: "BAT",
                     })
                 }
                 accessibilityRole="button"
-                accessibilityLabel="Test BA application"
+                accessibilityLabel="Test BAT application"
                 className="items-center rounded-xl bg-primary px-4 py-4"
             >
               <Text className="font-semibold text-white">
-                Test BA Application
+                Test BAT Application
               </Text>
             </Pressable>
           </View>
